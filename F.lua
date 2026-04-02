@@ -13,7 +13,7 @@ local TweenService = game:GetService('TweenService')
 local CoreGui = game:GetService('CoreGui')
 
 local Junkie = loadstring(game:HttpGet("https://jnkie.com/sdk/library.lua"))() do
-    Junkie.service = "test"
+    Junkie.service = "GG"
     Junkie.identifier = "1064541" 
     Junkie.provider = "BF"
 end
@@ -306,7 +306,7 @@ function Library:Window(Callback)
         Thickness = 1
     })
 
-    -- Library image 1361715547856541 คือไอดีรุป
+    -- Library image
     local Library_1 = Library:Create("ImageLabel", {
         Name = "Library",
         Parent = Banner_1,
@@ -707,19 +707,21 @@ function Library:Window(Callback)
             local Click: TextButton = Library:Button(Enter_1)
 
             local function ValidateAndLaunch(key)
-                if not key or key == "" then
-                    return
-                end
-
                 local validation = Junkie.check_key(key)
 
                 if validation and validation.valid then
-                    Library.SaveKey:Save(key)
+                    if validation.message == "KEYLESS" then
+                        key = "KEYLESS"
+                        MainText.Text = "Keyless Mode"
+                    else
+                        Library.SaveKey:Save(key)
+                        MainText.Text = "Welcome"
+                    end
+
+                    _ENV.SCRIPT_KEY = key
 
                     Link_1.Visible = false
                     Input_1.Visible = false
-
-                    MainText.Text = "Welcome"
 
                     local ExpandSize_VALID = Library:Tween({
                         v = Background_1,
@@ -741,8 +743,10 @@ function Library:Window(Callback)
 
                     ExpandSize_VALID:Play()
                 else
-                    Library.SaveKey:Clear()
-                    TextBox.Text = Colors("Invalid license key.", Color3.fromRGB(255, 69, 69))
+                    if key and key ~= "" then
+                        Library.SaveKey:Clear()
+                        TextBox.Text = Colors("Invalid license key.", Color3.fromRGB(255, 69, 69))
+                    end
                 end
             end
 
@@ -757,7 +761,7 @@ function Library:Window(Callback)
                     _ENV.SCRIPT_KEY = TextBox.Text
                 end)
 
-                if key then ValidateAndLaunch(key) end
+                ValidateAndLaunch(key)
 
                 Click.MouseButton1Click:Connect(function()
                     task.spawn(Library.Effect, Click, Enter_1)
