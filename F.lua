@@ -699,6 +699,14 @@ function Library:Window(Callback)
             Link_1.Visible = false
             Input_1.Visible = false
 
+            local function Finalize()
+                delay(2.5, function()
+                    Secret:Destroy()
+                    task.wait(0.5)
+                    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
+                end)
+            end
+
             local currentSize = Background_1.Size
             if currentSize.Y.Offset > 110 then
                 local ExpandSize_VALID = Library:Tween({
@@ -711,21 +719,10 @@ function Library:Window(Callback)
                     }
                 })
 
-                ExpandSize_VALID.Completed:Connect(function()
-                    delay(2.5, function()
-                        Secret:Destroy()
-                        task.wait(0.5)
-                        loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
-                    end)
-                end)
-
+                ExpandSize_VALID.Completed:Connect(Finalize)
                 ExpandSize_VALID:Play()
             else
-                delay(2.5, function()
-                    Secret:Destroy()
-                    task.wait(0.5)
-                    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
-                end)
+                Finalize()
             end
             return true
         else
@@ -769,13 +766,15 @@ function Library:Window(Callback)
             do
                 TextBox.Text = initialKey or ""
 
+                _ENV.SCRIPT_KEY = initialKey or ""
+
                 TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-                    getgenv().SCRIPT_KEY = TextBox.Text
+                    _ENV.SCRIPT_KEY = TextBox.Text
                 end)
 
                 Click.MouseButton1Click:Connect(function()
                     task.spawn(Library.Effect, Click, Enter_1)
-                    ValidateAndLaunch(getgenv().SCRIPT_KEY)
+                    ValidateAndLaunch(_ENV.SCRIPT_KEY)
                 end)
 
                 ClickGetkey.MouseButton1Click:Connect(function()
