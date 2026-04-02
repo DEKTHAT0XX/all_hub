@@ -693,7 +693,7 @@ function Library:Window(Callback)
         if validation and validation.valid then
             if validation.message == "KEYLESS" then
                 getgenv().SCRIPT_KEY = "KEYLESS"
-                MainText.Text = "ไม่มีคีย์"
+                MainText.Text = "📢 ไม่มีคีย์ อัพเดตเรื่อยๆ "
                 print("Junkie System: Keyless Mode Activated")
             else
                 Library.SaveKey:Save(key)
