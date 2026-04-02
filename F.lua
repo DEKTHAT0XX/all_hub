@@ -684,15 +684,22 @@ function Library:Window(Callback)
 
     local function ValidateAndLaunch(key)
         local validation = Junkie.check_key(key)
+        
+        -- Debug print to see what the server says
+        if validation then
+            print("Junkie Status: " .. tostring(validation.valid) .. " | Message: " .. tostring(validation.message))
+        end
 
         if validation and validation.valid then
             if validation.message == "KEYLESS" then
                 getgenv().SCRIPT_KEY = "KEYLESS"
                 MainText.Text = "Keyless Mode"
+                print("Junkie System: Keyless Mode Activated")
             else
                 Library.SaveKey:Save(key)
                 getgenv().SCRIPT_KEY = key
                 MainText.Text = "Welcome"
+                print("Junkie System: Key Verified")
             end
 
             Link_1.Visible = false
@@ -702,7 +709,7 @@ function Library:Window(Callback)
                 delay(2.5, function()
                     Secret:Destroy()
                     task.wait(0.5)
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/DEKTHAT0XX/all_hub/refs/heads/main/DEKTAI.lua"))()
+                    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
                 end)
             end
 
