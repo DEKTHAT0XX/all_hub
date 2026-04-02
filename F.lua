@@ -737,7 +737,7 @@ function Library:Window(Callback)
                         delay(2.5, function()
                             Secret:Destroy()
                             task.wait(0.5)
-                            loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
+                            loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/da64f4df9be61856c2e4a03d8f00aa42a701ed0f7618f1b9957eb4a4a2d10274/download"))()
                         end)
                     end)
 
