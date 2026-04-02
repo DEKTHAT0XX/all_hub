@@ -683,7 +683,6 @@ function Library:Window(Callback)
     end
 
     local function ValidateAndLaunch(key)
-        key = key or "" -- Ensure key is always a string
         local validation = Junkie.check_key(key)
 
         if validation and validation.valid then
@@ -703,7 +702,7 @@ function Library:Window(Callback)
                 delay(2.5, function()
                     Secret:Destroy()
                     task.wait(0.5)
-                    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/DEKTHAT0XX/all_hub/refs/heads/main/DEKTAI.lua"))()
                 end)
             end
 
@@ -734,7 +733,7 @@ function Library:Window(Callback)
         end
     end
 
-    local initialKey = Library.SaveKey:Load() or ""
+    local initialKey = Library.SaveKey:Load() or getgenv().SCRIPT_KEY
     if ValidateAndLaunch(initialKey) then
         return
     end
@@ -766,15 +765,13 @@ function Library:Window(Callback)
             do
                 TextBox.Text = initialKey or ""
 
-                _ENV.SCRIPT_KEY = initialKey or ""
-
                 TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-                    _ENV.SCRIPT_KEY = TextBox.Text
+                    getgenv().SCRIPT_KEY = TextBox.Text
                 end)
 
                 Click.MouseButton1Click:Connect(function()
                     task.spawn(Library.Effect, Click, Enter_1)
-                    ValidateAndLaunch(_ENV.SCRIPT_KEY)
+                    ValidateAndLaunch(getgenv().SCRIPT_KEY)
                 end)
 
                 ClickGetkey.MouseButton1Click:Connect(function()
