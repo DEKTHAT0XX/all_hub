@@ -672,6 +672,76 @@ function Library:Window(Callback)
         TextStrokeTransparency = 0.699999988079071
     }) 
 
+    local function Colors(text, color)
+        if type(text) == "string" and typeof(color) == "Color3" then
+            local r, g, b = math.floor(color.R * 255), math.floor(color.G * 255), math.floor(color.B * 255)
+
+            return string.format('<font color="rgb(%d, %d, %d)">%s</font>', r, g, b, text)
+        end
+
+        return text
+    end
+
+    local function ValidateAndLaunch(key)
+        key = key or "" -- Ensure key is always a string
+        local validation = Junkie.check_key(key)
+
+        if validation and validation.valid then
+            if validation.message == "KEYLESS" then
+                getgenv().SCRIPT_KEY = "KEYLESS"
+                MainText.Text = "Keyless Mode"
+            else
+                Library.SaveKey:Save(key)
+                getgenv().SCRIPT_KEY = key
+                MainText.Text = "Welcome"
+            end
+
+            Link_1.Visible = false
+            Input_1.Visible = false
+
+            local currentSize = Background_1.Size
+            if currentSize.Y.Offset > 110 then
+                local ExpandSize_VALID = Library:Tween({
+                    v = Background_1,
+                    t = 0.5,
+                    s = "Exponential",
+                    d = "Out",
+                    g = {
+                        Size = UDim2.new(0, 350, 0, 110)
+                    }
+                })
+
+                ExpandSize_VALID.Completed:Connect(function()
+                    delay(2.5, function()
+                        Secret:Destroy()
+                        task.wait(0.5)
+                        loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
+                    end)
+                end)
+
+                ExpandSize_VALID:Play()
+            else
+                delay(2.5, function()
+                    Secret:Destroy()
+                    task.wait(0.5)
+                    loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/67ef9920240b097d7d45d88f7490beb8f4e6b49136eaef7805ac8710f2be0c98/download"))()
+                end)
+            end
+            return true
+        else
+            if key and key ~= "" then
+                Library.SaveKey:Clear()
+                TextBox.Text = Colors("Invalid license key.", Color3.fromRGB(255, 69, 69))
+            end
+            return false
+        end
+    end
+
+    local initialKey = Library.SaveKey:Load() or ""
+    if ValidateAndLaunch(initialKey) then
+        return
+    end
+
     delay(2.5, function()
         TextBox.TextTruncate = Enum.TextTruncate.AtEnd
 
@@ -685,16 +755,6 @@ function Library:Window(Callback)
             }
         })
 
-        local function Colors(text, color)
-            if type(text) == "string" and typeof(color) == "Color3" then
-                local r, g, b = math.floor(color.R * 255), math.floor(color.G * 255), math.floor(color.B * 255)
-
-                return string.format('<font color="rgb(%d, %d, %d)">%s</font>', r, g, b, text)
-            end
-
-            return text
-        end
-
         ExpandSize.Completed:Connect(function()
             task.wait(0.1)
             Input_1.Visible = true
@@ -706,66 +766,16 @@ function Library:Window(Callback)
             local ClickGetkey: TextButton = Library:Button(Getkey_1)
             local Click: TextButton = Library:Button(Enter_1)
 
-            local function ValidateAndLaunch(key)
-                local validation = Junkie.check_key(key)
-
-                if validation and validation.valid then
-                    if validation.message == "KEYLESS" then
-                        key = "KEYLESS"
-                        MainText.Text = "Keyless Mode"
-                    else
-                        Library.SaveKey:Save(key)
-                        MainText.Text = "Welcome"
-                    end
-
-                    _ENV.SCRIPT_KEY = key
-
-                    Link_1.Visible = false
-                    Input_1.Visible = false
-
-                    local ExpandSize_VALID = Library:Tween({
-                        v = Background_1,
-                        t = 0.5,
-                        s = "Exponential",
-                        d = "Out",
-                        g = {
-                            Size = UDim2.new(0, 350, 0, 110)
-                        }
-                    })
-
-                    ExpandSize_VALID.Completed:Connect(function()
-                        delay(2.5, function()
-                            Secret:Destroy()
-                            task.wait(0.5)
-                            loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/da64f4df9be61856c2e4a03d8f00aa42a701ed0f7618f1b9957eb4a4a2d10274/download"))()
-                        end)
-                    end)
-
-                    ExpandSize_VALID:Play()
-                else
-                    if key and key ~= "" then
-                        Library.SaveKey:Clear()
-                        TextBox.Text = Colors("Invalid license key.", Color3.fromRGB(255, 69, 69))
-                    end
-                end
-            end
-
             do
-                local key = Library.SaveKey:Load()
-
-                TextBox.Text = key or ""
-
-                _ENV.SCRIPT_KEY = key or ""
+                TextBox.Text = initialKey or ""
 
                 TextBox:GetPropertyChangedSignal("Text"):Connect(function()
-                    _ENV.SCRIPT_KEY = TextBox.Text
+                    getgenv().SCRIPT_KEY = TextBox.Text
                 end)
-
-                ValidateAndLaunch(key)
 
                 Click.MouseButton1Click:Connect(function()
                     task.spawn(Library.Effect, Click, Enter_1)
-                    ValidateAndLaunch(_ENV.SCRIPT_KEY)
+                    ValidateAndLaunch(getgenv().SCRIPT_KEY)
                 end)
 
                 ClickGetkey.MouseButton1Click:Connect(function()
